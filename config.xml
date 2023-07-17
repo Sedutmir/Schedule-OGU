@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget id="sedutmir.ogu.schedule" android-packageName="sedutmir.ogu.schedule" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>ОГУ Расписание</name>
+  <description>Приложение для просмотра расписания занятий ОГУ им. Тургенева г. Орла</description>
+  <author email="sedutmir@yahoo.com" href="https://cordova.apache.org">
+        Sedutmir
+    </author>
+  
+  <content src="index.html"/>
+  <allow-intent href="http://*/*"/>
+  <allow-intent href="https://*/*"/>
+  <preference name="OverrideUserAgent" value="OGU Schedule App"/>
+  <hook src="node_modules/cordova-import-npm/scripts/importNpmPackages.js" type="before_prepare"/>
+  
+  <platform name="android">
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon.xml" />
+    <icon src="res/icon.xml" />
+  </platform>
+</widget>

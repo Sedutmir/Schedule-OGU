@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/loader.css">
+    <title>ОГУ Расписание</title>
+</head>
+<body>
+    <header class="flex-sb">
+        <h1 class="title">Расписание</h1>
+        <button class="icon icon-right" id="calendar-btn">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <style>.a,.b{fill:none;stroke:inherit;stroke-linecap:round;stroke-linejoin:round;}.b{fill-rule:evenodd;}</style>
+                </defs>
+                <path class="a" d="M8.8541,23.91a4.9429,4.9429,0,0,1,4.8148-5,4.976,4.976,0,0,1,3.5185,8.5185C15.15,29.0947,8.8541,33.91,8.8541,33.91h9.8148"/>
+                <polyline class="a" points="22.79 33.909 30.853 18.909 20.915 18.909"/>
+                <path class="b" d="M43.5,25.7931V11.8621a4,4,0,0,0-4-4H8.5a4,4,0,0,0-4,4V36.1379a4,4,0,0,0,4,4"/>
+                <path class="b" d="M43.5,36.1379V11.8621a4,4,0,0,0-4-4H8.5a4,4,0,0,0-4,4V36.1379a4,4,0,0,0,4,4h31A4,4,0,0,0,43.5,36.1379Z"/>
+                <path class="b" d="M35.2069,40.1379V15.819a3.1379,3.1379,0,0,0-3.1379-3.138H4.5"/>
+            </svg>
+        </button>
+        <button class="icon icon-right hidden" id="calendar-close">
+            <svg fill="inherit" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                <path fill="inherit" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"/>
+            </svg>
+        </button>
+    </header>
+    <main>
+        <nav class="weekdays">
+            <ul class="weekdays-list">
+                <li>
+                    <button class="weekday-item" data-index="0">
+                        <h3 class="day"></h2>
+                        <h2 class="weekday">ПН</h3>
+                        <ul class="icons">
+                            <li class="color--1"></li>
+                            <li class="color--2"></li>
+                            <li class="color--3"></li>
+                        </ul>
+                    </button>
+                </li>
+                <li>
+                    <button class="weekday-item" data-index="1">
+                        <h3 class="day"></h2>
+                        <h2 class="weekday">ВТ</h3>
+                        <ul class="icons">
+
+                        </ul>
+                    </button>
+                </li>
+                <li>
+                    <button class="weekday-item" data-index="2">
+                        <h3 class="day"></h2>
+                        <h2 class="weekday">СР</h3>
+                        <ul class="icons">
+                            <li class="color--2"></li>
+                            <li class="color--3"></li>
+                        </ul>
+                    </button>
+                </li>
+                <li>
+                    <button class="weekday-item" data-index="3">
+                        <h3 class="day"></h2>
+                        <h2 class="weekday">ЧТ</h3>
+                        <ul class="icons">
+                            <li class="color--2"></li>
+                        </ul>
+                    </button>
+                </li>
+                <li>
+                    <button class="weekday-item" data-index="4">
+                        <h3 class="day"></h2>
+                        <h2 class="weekday">ПТ</h3>
+                        <ul class="icons">
+                            <li class="color--1"></li>
+                            <li class="color--2"></li>
+                            <li class="color--3"></li>
+                            <li class="color--4"></li>
+                        </ul>
+                    </button>
+                </li>
+                <li>
+                    <button class="weekday-item" data-index="5">
+                        <h3 class="day"></h2>
+                        <h2 class="weekday">СБ</h3>
+                        <ul class="icons">
+                            <li class="color--1"></li>
+                            <li class="color--2"></li>
+                            <li class="color--3"></li>
+                            <li class="color--4"></li>
+                            <li class="color--5"></li>
+                            <li class="color--6"></li>
+                        </ul>
+                    </button>
+                </li>
+            </ul>
+            <h2 id="date"></h2>
+        </nav>
+        <div class="hidden" id="content">
+            <div id="schedule">
+                <section data-tab="0"><div class="centered">0</div></section>
+                <section data-tab="1"><div class="centered">1</div></section>
+                <section data-tab="2"><div class="centered">2</div></section>
+                <section data-tab="3"><div class="centered">3</div></section>
+                <section data-tab="4"><div class="centered">4</div></section>
+                <section data-tab="5"><div class="centered">5</div></section>
+            </div>
+            <div class="hidden" id="calendar">
+                <div class="month-indicator">
+                    <h2></h2>
+                </div>
+                <div class="day-of-week">
+                    <span>ПН</span>
+                    <span>ВТ</span>
+                    <span>СР</span>
+                    <span>ЧТ</span>
+                    <span>ПТ</span>
+                    <span>СБ</span>
+                    <span>ВС</span>
+                </div>
+                <div class="date-grid">
+
+                </div>
+                <div class="buttons">
+                    <button class="icon" id="calendar-prev">
+                        <svg viewBox="0 0 1024 1024" fill="inherit" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M669.6 849.6c8.8 8 22.4 7.2 30.4-1.6s7.2-22.4-1.6-30.4l-309.6-280c-8-7.2-8-17.6 0-24.8l309.6-270.4c8.8-8 9.6-21.6 2.4-30.4-8-8.8-21.6-9.6-30.4-2.4L360.8 480.8c-27.2 24-28 64-0.8 88.8l309.6 280z" fill="inherit" />
+                        </svg>
+                    </button>
+                    <button class="icon" id="calendar-next">
+                        <svg viewBox="0 0 1024 1024" fill="inherit" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M669.6 849.6c8.8 8 22.4 7.2 30.4-1.6s7.2-22.4-1.6-30.4l-309.6-280c-8-7.2-8-17.6 0-24.8l309.6-270.4c8.8-8 9.6-21.6 2.4-30.4-8-8.8-21.6-9.6-30.4-2.4L360.8 480.8c-27.2 24-28 64-0.8 88.8l309.6 280z" fill="inherit" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="centered" id="loader-wrapper">
+            <span class="loader"></span>
+        </div>
+    </main>
+    <script src="cordova.js"></script>
+    <script type="module" src="js/schedule.js"></script>
+</body>
+</html>
