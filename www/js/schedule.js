@@ -1,35 +1,36 @@
 import { fetch, setHeaders } from "./fetch.js";
 import * as data from "./data.js";
 import * as redom from "./libs/redom.js";
-globalThis.data = data;
-globalThis.redom = redom;
 
-globalThis.tabs_button = Array.from(document.querySelectorAll('.weekday-item'));
-globalThis.date_header = document.querySelector('#date');
-globalThis.schedule = document.querySelector('#schedule');
-globalThis.loader = document.querySelector('#loader-wrapper');
-globalThis.content = document.getElementById("content");
-globalThis.weekdays = document.querySelector('.weekdays');
+// globalThis.data = data;
+// globalThis.redom = redom;
 
-globalThis.calendar_btn = document.querySelector('#calendar-btn');
-globalThis.calendar = document.querySelector('#calendar');
-globalThis.calendar_close = document.querySelector('#calendar-close');
-globalThis.calendar_prev = document.querySelector('#calendar-prev');
-globalThis.calendar_next = document.querySelector('#calendar-next');
-
-globalThis.now = new Date();
-globalThis.start_week = new Date(data.getStartOfWeek(now));
-globalThis.current_date = now;
-
-globalThis.tracking_observer = new IntersectionObserver(scrollTracking, {
-    root: schedule,
-	threshold: 0.75,
-});
 
 document.addEventListener('deviceready', onDeviceReady, false);
 
 async function onDeviceReady() {
     await setHeaders();
+
+    globalThis.tabs_button = Array.from(document.querySelectorAll('.weekday-item'));
+    globalThis.date_header = document.querySelector('#date');
+    globalThis.loader = document.querySelector('#loader-wrapper');
+    globalThis.content = document.getElementById("content");
+    globalThis.weekdays = document.querySelector('.weekdays');
+
+    globalThis.schedule = document.querySelector('#schedule');
+    globalThis.schedule_tabs = Array.from(schedule.querySelectorAll('.schedule-tab'));
+    globalThis.control_tabs = Array.from(schedule.querySelectorAll('.control-tab'));
+
+    let active_tab_observer = new IntersectionObserver(activeTabObserve, { threshold: .6 } );
+    schedule_tabs.forEach(tab => active_tab_observer.observe(tab));
+
+    globalThis.control_tab_active = false;
+    let constrol_tab_observer = new IntersectionObserver(controlTabObserve, { threshold: 1 });
+    control_tabs.forEach(tab => constrol_tab_observer.observe(tab));
+
+    globalThis.now = new Date();
+    globalThis.start_week = new Date(data.getStartOfWeek(now));
+    globalThis.current_date = now;
 
     main();
 }
@@ -37,40 +38,146 @@ async function onDeviceReady() {
 async function main() {
     buildTabs(now);
 
-    if (getWeekday(current_date) !== 6) {
-        let section = document.querySelector(`section[data-tab="${getWeekday(current_date)}"]`);
-        schedule.scrollTo(section.getBoundingClientRect().left, 0)
+    if (getWeekday(current_date) === 6) {
+        schedule_tabs.at(0).scrollIntoView({block: "start"});
+    } else {
+        schedule_tabs.at(getWeekday(current_date)).scrollIntoView({block: "start"});
     }
-
-    document.querySelectorAll('#schedule section').forEach(el => tracking_observer.observe(el));
 
     document.querySelector('.weekdays-list').addEventListener('click', ev => {
         let btn = ev.target.closest('.weekday-item');
         if (btn) {
             let index = Number(btn.dataset.index);
-            setActiveTab(index);
-            current_date = start_week.addDays(index);
-            setDateHeader(current_date);
+            schedule_tabs.at(index).scrollIntoView({block: "start", behavior: "smooth"});
         }
     });
 
+    document.querySelector('#back-btn').addEventListener('click', () => {
+        localStorage.setItem('select_mode?', true);
+        window.location = 'index.html';
+    });
+
+    let current_schedule = JSON.parse(localStorage.getItem('current_schedule'));
+    let title;
+
+    switch (current_schedule.type) {
+        case "group":
+            title = current_schedule.data.title;
+            break;
+
+        case "teacher":
+            title = `${current_schedule.data.firstname} ${current_schedule.data.name[0]}. ${current_schedule.data.secondname[0]}.`;
+            break;
+
+        case "auditorium":
+            title = `${current_schedule.data.building === 17 ? 'Фб' : current_schedule.data.building} - ${current_schedule.data.auditorium}`;
+            break;
+
+        default:
+            title = 'Расписание';
+            break;
+    }
+
+    document.querySelector('.title').textContent = title;
+
+    initCalendar();
+}
+
+
+/* TABS */
+
+function buildTabs(date) {
+    start_week = new Date(data.getStartOfWeek(date));
+
+    if (getWeekday(date) === 6) {
+        start_week = start_week.addDays(7);
+    }
+
+    for (const [index, btn] of tabs_button.entries()) {
+        btn.querySelector('.day').textContent = start_week.addDays(index).getDate();
+    }
+
+    setDateHeader(date);
+}
+
+function activeTabObserve(entries) {
+    for (const entry of entries) {
+        if (entry.isIntersecting) {
+            const index = Number(entry.target.dataset.tab);
+            current_date = start_week.addDays(index);
+            setActiveTab(index);
+            setDateHeader(current_date);
+        }
+    }
+}
+
+function controlTabObserve(entries) {
+    for (const entry of entries) {
+        if (entry.isIntersecting && !control_tab_active) {
+            control_tab_active = true;
+
+            const action = entry.target.dataset.action;
+
+            if (action === 'prev') {
+                start_week = start_week.addDays(-7);
+                current_date = start_week.addDays(5);
+            } else {
+                start_week = start_week.addDays(7);
+                current_date = start_week.addDays(0);
+            }
+
+            let index = getWeekday(current_date);
+            schedule_tabs.at(index).scrollIntoView({block: "start"});
+
+            buildTabs(current_date);
+
+            setTimeout(() => {
+                control_tab_active = false;
+            }, 100)
+        }
+    }
+}
+
+function setActiveTab(index) {
+    tabs_button[0].closest('ul').querySelector('.active')?.classList.remove('active');
+    if (index === 6) return;
+    tabs_button[index].classList.add('active');
+}
+
+function setDateHeader(date) {
+    const weekdays = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье'];
+    const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+    date_header.textContent = `${weekdays[getWeekday(date)]}, ${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`
+}
+
+
+/* CALENDAR */
+
+function initCalendar() {
+    let calendar_btn = document.querySelector('#calendar-btn');
+    let calendar = document.querySelector('#calendar');
+    let calendar_close = document.querySelector('#calendar-close');
+    globalThis.calendar_prev = document.querySelector('#calendar-prev');
+    globalThis.calendar_next = document.querySelector('#calendar-next');
+
     calendar_btn.addEventListener('click', () => {
         calendar.classList.remove('hidden');
-        content.classList.remove('hidden');
         calendar_close.classList.remove('hidden');
+
         schedule.classList.add('hidden');
         calendar_btn.classList.add('hidden');
         weekdays.classList.add('hidden');
+
         buildCalendar(current_date);
     });
 
     calendar_close.addEventListener('click', () => {
-        calendar.classList.add('hidden');
-        content.classList.add('hidden');
-        calendar_close.classList.add('hidden');
         schedule.classList.remove('hidden');
         calendar_btn.classList.remove('hidden');
         weekdays.classList.remove('hidden');
+
+        calendar.classList.add('hidden');
+        calendar_close.classList.add('hidden');
     });
 
     calendar_prev.addEventListener('click', function() {
@@ -93,43 +200,6 @@ async function main() {
             calendar_close.click();
         }
     });
-}
-
-function buildTabs(date) {
-    start_week = new Date(data.getStartOfWeek(date));
-
-    if (getWeekday(date) === 6) {
-        start_week = start_week.addDays(7);
-    }
-
-    for (const [index, btn] of tabs_button.entries()) {
-        btn.querySelector('.day').textContent = start_week.addDays(index).getDate();
-    }
-
-    setActiveTab(getWeekday(date));
-    setDateHeader(date);
-}
-
-function getWeekday(date) {
-    return (date.getDay() + 6) % 7;
-}
-
-Date.prototype.addDays = function(days) {
-    var date = new Date(this.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-}
-
-function setActiveTab(index) {
-    tabs_button[0].closest('ul').querySelector('.active')?.classList.remove('active');
-    if (index === 6) return;
-    tabs_button[index].classList.add('active');
-}
-
-function setDateHeader(date) {
-    const weekdays = ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота', 'воскресенье'];
-    const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-    date_header.textContent = `${weekdays[getWeekday(date)]}, ${date.getDate()} ${months[date.getMonth()]}, ${date.getFullYear()}`
 }
 
 function buildCalendar(date) {
@@ -172,13 +242,14 @@ function buildCalendar(date) {
     calendar_next.dataset.date = date_next;
 }
 
-function scrollTracking(entries) {
-    for (const entry of entries) {
-        if (entry.isIntersecting) {
-            let index = Number(entry.target.dataset.tab);
-            setActiveTab(index);
-            current_date = start_week.addDays(index);
-            setDateHeader(current_date);
-        }
-    }
+/* OTHER */
+
+function getWeekday(date) {
+    return (date.getDay() + 6) % 7;
+}
+
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
 }

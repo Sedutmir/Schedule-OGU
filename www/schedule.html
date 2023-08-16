@@ -8,11 +8,17 @@
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
     <meta name="color-scheme" content="light dark">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/slider.css">
     <link rel="stylesheet" href="css/loader.css">
     <title>ОГУ Расписание</title>
 </head>
 <body>
     <header class="flex-sb">
+        <button class="icon icon-left" id="back-btn">
+            <svg viewBox="0 0 1024 1024" fill="inherit" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M669.6 849.6c8.8 8 22.4 7.2 30.4-1.6s7.2-22.4-1.6-30.4l-309.6-280c-8-7.2-8-17.6 0-24.8l309.6-270.4c8.8-8 9.6-21.6 2.4-30.4-8-8.8-21.6-9.6-30.4-2.4L360.8 480.8c-27.2 24-28 64-0.8 88.8l309.6 280z" fill="inherit" />
+            </svg>
+        </button>
         <h1 class="title">Расписание</h1>
         <button class="icon icon-right" id="calendar-btn">
             <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -103,15 +109,31 @@
             </ul>
             <h2 id="date"></h2>
         </nav>
-        <div class="hidden" id="content">
+        <div id="content">
             <div id="schedule">
-                <section data-tab="0"><div class="centered">0</div></section>
-                <section data-tab="1"><div class="centered">1</div></section>
-                <section data-tab="2"><div class="centered">2</div></section>
-                <section data-tab="3"><div class="centered">3</div></section>
-                <section data-tab="4"><div class="centered">4</div></section>
-                <section data-tab="5"><div class="centered">5</div></section>
+                <section class="control-tab" data-action="prev"><div class="centered">PREV</div></section>
+                <section class="schedule-tab" data-tab="0"><div class="centered">0</div></section>
+                <section class="schedule-tab" data-tab="1"><div class="centered">1</div></section>
+                <section class="schedule-tab" data-tab="2"><div class="centered">2</div></section>
+                <section class="schedule-tab" data-tab="3"><div class="centered">3</div></section>
+                <section class="schedule-tab" data-tab="4"><div class="centered">4</div></section>
+                <section class="schedule-tab" data-tab="5"><div class="centered">5</div></section>
+                <section class="control-tab" data-action="next"><div class="centered">NEXT</div></section>
             </div>
+
+            <!-- <div id="schedule" class="slider">
+                <div class="wrapper">
+                    <div class="slides" id="slides">
+                        <div class="slide" data-tab="1"><div class="centered">1</div></div>
+                        <div class="slide" data-tab="2"><div class="centered">2</div></div>
+                        <div class="slide" data-tab="3"><div class="centered">3</div></div>
+                        <div class="slide" data-tab="4"><div class="centered">4</div></div>
+                        <div class="slide" data-tab="5"><div class="centered">5</div></div>
+                        <div class="slide" data-tab="6"><div class="centered">6</div></div>
+                    </div>
+                </div>
+            </div> -->
+
             <div class="hidden" id="calendar">
                 <div class="month-indicator">
                     <h2></h2>
@@ -141,9 +163,6 @@
                     </button>
                 </div>
             </div>
-        </div>
-        <div class="centered" id="loader-wrapper">
-            <span class="loader"></span>
         </div>
     </main>
     <script src="cordova.js"></script>

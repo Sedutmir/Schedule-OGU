@@ -1,0 +1,20 @@
+#schedule {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    column-gap: 1em;
+    height: 100%;
+    width: 100vw;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+}
+
+#schedule > section {
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    height: 100%;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: calc(100vw - 1em);
+}
+
