@@ -168,12 +168,15 @@ function rawToAuditorium(data, building) {
 }
 
 function rawToLesson(data) {
+    const times = ['', ["8:30", "10:00"], ["10:10", "11:40"], ["12:00", "13:30"], ["13:40", "15:10"], ["15:20", "16:50"], ["17:00", "18:30"], ["18:40", "20:10"], ["20:15", "21:45"]];
     return {
         subgroup: data.NumberSubGruop === 0 ? null : data.NumberSubGruop,
         title: data.TitleSubject,
+        special: (data.special === "" || !data.special) ? null : data.special.trim(),
         type: data.TypeLesson,
         numberLesson: data.NumberLesson,
-        weekday: data.DayWeek,
+        time: {start: times[data.NumberLesson][0], end: times[data.NumberLesson][1]},
+        weekday: data.DayWeek - 1,
         date: data.DateLesson,
         place: {
             building: data.Korpus,
@@ -191,6 +194,22 @@ function rawToLesson(data) {
         },
         toString() { return this.title }
     };
+}
+
+export function lessonsToFormat(lessons) {
+    let res = [
+        [], [], [], [], [], []
+    ];
+
+    for (const lesson of lessons) {
+        res[lesson.weekday].push(lesson);
+    }
+
+    for (const day of res) {
+        day.sort((a, b) => a.numberLesson - b.numberLesson);
+    }
+
+    return res;
 }
 
 export function getStartOfWeek(timestamp) {

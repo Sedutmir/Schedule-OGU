@@ -310,9 +310,10 @@ menu > .icon + .icon {
 .color--2 { background-color: #FF7F00; }
 .color--3 { background-color: #FFFF00; }
 .color--4 { background-color: #00FF00; }
-.color--5 { background-color: #0000FF; }
-.color--6 { background-color: #2E2B5F; }
-.color--7 { background-color: #2E2B5F; }
+.color--5 { background-color: #00ccff; }
+.color--6 { background-color: #0000ff; }
+.color--7 { background-color: #44408b; }
+.color--8 { background-color: #000000; }
 
 #search-input {
     width: 100%;

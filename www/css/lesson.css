@@ -1,0 +1,43 @@
+.lesson {
+    background-color: #fff3;
+    border-radius: 1em;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.lesson-header {
+    display: flex;
+    justify-content: space-between;
+    color: hsl(140, 2.7%, 60%);
+    font-size: .9em;
+}
+
+.lesson h3 {
+    color: hsl(140, 2.7%, 90%);
+    font-size: 1.5em;
+    padding: 0.2em 0;
+}
+
+.lesson-footer {
+    display: flex;
+    gap: 2em;
+    color: hsl(140, 2.7%, 75%);
+}
+
+.lesson-footer-item {
+    display: flex;
+    gap: .3em;
+    align-items: center;
+    justify-content: center;
+}
+
+.lesson-footer-item > .icon {
+    height: 1.3em;
+    padding: 0;
+    display: inline-block;
+}
+
+.lesson-footer-item > svg {
+    stroke: hsl(140, 2.7%, 75%);
+}
